@@ -1,0 +1,34 @@
+{
+  "name": "@gostcrypto/angularjs",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "sideEffects": false,
+  "dependencies": {
+    "@gostcrypto/core": "0.1.0"
+  },
+  "peerDependencies": {
+    "angular": ">=1.6"
+  },
+  "peerDependenciesMeta": {
+    "angular": {
+      "optional": true
+    }
+  },
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "IURII IAKOVLEV"
+}

@@ -1,0 +1,14 @@
+{
+  "name": "gostcrypto-node-example",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "hash": "node hash-file.mjs",
+    "sign:pfx": "node sign-pfx.mjs"
+  },
+  "dependencies": {
+    "@gostcrypto/cms": "0.1.0",
+    "@gostcrypto/hash": "0.1.0",
+    "@gostcrypto/node": "0.1.0"
+  }
+}

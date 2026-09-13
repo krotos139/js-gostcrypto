@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>gostcrypto-js — CryptoPro browser smoke test</title>
+  <style>
+    :root { color-scheme: light dark; font-family: system-ui, sans-serif; }
+    body { margin: 2rem auto; max-width: 56rem; padding: 0 1rem; }
+    label { display: block; margin: 1rem 0 .35rem; }
+    select, textarea, button, input { box-sizing: border-box; font: inherit; width: 100%; }
+    textarea { min-height: 6rem; }
+    button { margin-top: 1rem; padding: .65rem; }
+    .actions { display: grid; gap: .75rem; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); }
+    .download { display: inline-block; margin-top: 1rem; }
+    output { display: block; margin-top: 1rem; padding: .8rem; white-space: pre-wrap; }
+    [data-kind="success"] { background: color-mix(in srgb, green 18%, transparent); }
+    [data-kind="error"] { background: color-mix(in srgb, red 18%, transparent); }
+  </style>
+</head>
+<body>
+  <h1>CryptoPro browser smoke test</h1>
+  <p>Страница использует собранный browser bundle <code>@gostcrypto/gostcrypto</code>. Закрытый ключ не покидает CSP или USB-токен.</p>
+
+  <label for="certificate">Сертификат с закрытым ключом</label>
+  <select id="certificate" disabled></select>
+
+  <label for="data">Данные для подписи</label>
+  <textarea id="data">gostcrypto-js browser integration test</textarea>
+
+  <label for="document">Или файл документа</label>
+  <input id="document" type="file">
+
+  <label for="signature">Подпись для отдельной проверки (.p7s); если не выбрана, используется только что созданная</label>
+  <input id="signature" type="file" accept=".p7s,.sig,application/pkcs7-signature">
+
+  <div class="actions">
+    <button id="validate" type="button" disabled>Проверить сертификат</button>
+    <button id="sign" type="button" disabled>Подписать и проверить</button>
+    <button id="verify" type="button" disabled>Проверить подпись</button>
+  </div>
+  <a id="download" class="download" hidden>Скачать подпись .p7s</a>
+  <output id="status" role="status">Инициализация CryptoPro…</output>
+
+  <script src="https://www.cryptopro.ru/sites/default/files/products/cades/cadesplugin_api.js"></script>
+  <script src="/packages/gostcrypto/dist/gostcrypto.min.js"></script>
+  <script type="module" src="/examples/cryptopro-browser/app.js"></script>
+</body>
+</html>

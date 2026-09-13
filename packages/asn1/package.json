@@ -1,0 +1,28 @@
+{
+  "name": "@gostcrypto/asn1",
+  "version": "0.1.0",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "sideEffects": false,
+  "dependencies": {
+    "@gostcrypto/hash": "0.1.0",
+    "@gostcrypto/legacy-gost341194": "0.1.0",
+    "@gostcrypto/signature": "0.1.0"
+  },
+  "author": "IURII IAKOVLEV"
+}

@@ -1,0 +1,37 @@
+site_name: gostcrypto-js documentation
+site_description: GOST cryptography for TypeScript, JavaScript, Node.js, and browsers
+site_url: https://krotos139.github.io/js-gostcrypto/
+repo_url: https://github.com/krotos139/js-gostcrypto
+repo_name: krotos139/js-gostcrypto
+
+theme:
+  name: readthedocs
+
+nav:
+  - Languages: index.md
+  - English:
+      - Getting started: en/index.md
+      - Algorithms and formats: en/algorithms.md
+      - Framework examples: en/frameworks.md
+      - Certificates and USB tokens: en/certificates.md
+      - Security: en/security.md
+  - Русский:
+      - Начало работы: ru/index.md
+      - Алгоритмы и форматы: ru/algorithms.md
+      - Примеры для фреймворков: ru/frameworks.md
+      - Сертификаты и USB-токены: ru/certificates.md
+      - Безопасность: ru/security.md
+  - Technical reference:
+      - Runtime integration: INTEGRATIONS.md
+      - Native certificate bridge: NATIVE_BRIDGE.md
+      - Benchmarks: BENCHMARKS.md
+      - Optimization audit: OPTIMIZATIONS.md
+      - Implementation plan: PLAN.md
+
+markdown_extensions:
+  - tables
+  - fenced_code
+  - toc:
+      permalink: true
+
+strict: true

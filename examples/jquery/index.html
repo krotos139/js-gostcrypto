@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>gostcrypto-js jQuery example</title>
+    <style>
+      body { font-family: system-ui, sans-serif; max-width: 52rem; margin: 2rem auto; padding: 0 1rem; }
+      label, output { display: block; margin: 1rem 0; }
+      select, textarea, button { box-sizing: border-box; display: block; width: 100%; margin-top: .35rem; font: inherit; }
+      textarea { min-height: 7rem; } button { padding: .7rem; }
+    </style>
+  </head>
+  <body>
+    <h1>gostcrypto-js + jQuery</h1>
+    <p>The private key remains in CryptoPro CSP or on the USB token.</p>
+    <label>Certificate<select id="certificate"></select></label>
+    <label>Text to sign<textarea id="data">gostcrypto-js jQuery example</textarea></label>
+    <button id="sign" disabled>Sign and verify</button>
+    <output id="status">Reading certificates…</output>
+    <script src="https://www.cryptopro.ru/sites/default/files/products/cades/cadesplugin_api.js"></script>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

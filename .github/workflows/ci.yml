@@ -1,0 +1,80 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Node ${{ matrix.node }} / ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            node: 18
+            node_options: --experimental-global-webcrypto
+          - os: ubuntu-latest
+            node: 20
+            node_options: ""
+          - os: ubuntu-latest
+            node: 22
+            node_options: ""
+          - os: windows-latest
+            node: 22
+            node_options: ""
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    env:
+      NODE_OPTIONS: ${{ matrix.node_options }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci
+      - run: npm run validate:packages
+      - run: npm test
+      - run: npm run validate:examples
+        if: matrix.os == 'ubuntu-latest' && matrix.node == 22
+      - name: Verify npm package contents
+        if: matrix.os == 'ubuntu-latest' && matrix.node == 22
+        run: npm pack --workspaces --dry-run
+
+  documentation:
+    name: Documentation
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-docs.txt
+      - run: python -m pip install -r requirements-docs.txt
+      - run: python -m mkdocs build --strict
+
+  benchmark-smoke:
+    name: Comparison benchmark smoke test
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Validate vectors and benchmark adapters
+        run: npm run benchmark:compare
+        env:
+          BENCHMARK_SAMPLES: 1

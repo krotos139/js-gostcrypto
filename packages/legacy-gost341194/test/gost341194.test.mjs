@@ -1,0 +1,10 @@
+import assert from "node:assert/strict";import test from "node:test";import{Gost341194Hash,gost341194,gost341194Test}from"@gostcrypto/legacy-gost341194";import{paramHashTest}from"@gostcrypto/legacy-gost28147";
+const revHex=(value)=>Uint8Array.from(Buffer.from(value,"hex")).reverse(),toHex=(value)=>Buffer.from(value).toString("hex");
+const cases=[
+["73657479622032333D6874676E656C202C6567617373656D2073692073696854","FAFF37A615A816691CFF3EF8B68CA247E09525F39F8119832EB81975D366C4B1"],
+["7365747962203035203D206874676E656C20736168206567617373656D206C616E696769726F206568742065736F70707553","0852F5623B89DD57AEB4781FE54DF14EEAFBC1350613763A0D770AA657BA1A47"]];
+test("RFC 5831 GOST 34.11-94 vectors",()=>{for(const [message,digest]of cases)assert.deepEqual(gost341194Test(revHex(message)),revHex(digest));});
+test("GOST 34.11-94 is independent of input chunks",()=>{const data=revHex(cases[1][0]),expected=gost341194Test(data);for(const size of[1,2,7,16,31,32,33,49]){const hash=new Gost341194Hash(paramHashTest());for(let offset=0;offset<data.length;offset+=size)hash.update(data.subarray(offset,offset+size));assert.deepEqual(hash.digest(),expected);}});
+test("digest does not mutate streaming state",()=>{const hash=new Gost341194Hash(paramHashTest()).update(new TextEncoder().encode("first")),first=hash.digest();assert.deepEqual(hash.digest(),first);hash.update(new TextEncoder().encode(" second"));assert.deepEqual(hash.digest(),gost341194Test(new TextEncoder().encode("first second")));});
+test("CryptoPro one-shot and reset",()=>{const data=new TextEncoder().encode("legacy certificate");const expected=gost341194(data),hash=new Gost341194Hash().update(new Uint8Array([1,2,3])).reset().update(data);assert.deepEqual(hash.digest(),expected);assert.equal(toHex(expected).length,64);});
+test("CryptoPro CSP 5.0 interoperability fixture",()=>{const data=Uint8Array.from({length:4097},(_,index)=>(index*73+19)&255);assert.equal(toHex(gost341194(data)),"7ebf23ac4a4bf2bb38d82b1ebb05f6c8bf17ca1ceb2978790edb2e97705bf426");});

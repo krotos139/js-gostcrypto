@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en" ng-app="example">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>gostcrypto-js AngularJS example</title>
+    <style>
+      body { font-family: system-ui, sans-serif; max-width: 52rem; margin: 2rem auto; padding: 0 1rem; }
+      label, output { display: block; margin: 1rem 0; }
+      select, textarea, button { box-sizing: border-box; display: block; width: 100%; margin-top: .35rem; font: inherit; }
+      textarea { min-height: 7rem; } button { padding: .7rem; }
+    </style>
+  </head>
+  <body ng-controller="SignerController as vm">
+    <h1>gostcrypto-js + AngularJS</h1>
+    <p>The private key remains in CryptoPro CSP or on the USB token.</p>
+    <label>Certificate
+      <select ng-model="vm.selected" ng-options="item as (item.certificate.subject + ' — ' + item.algorithm) for item in vm.certificates"></select>
+    </label>
+    <label>Text to sign<textarea ng-model="vm.text"></textarea></label>
+    <button ng-click="vm.sign()" ng-disabled="vm.busy || !vm.selected">Sign and verify</button>
+    <output>{{ vm.status }}</output>
+    <script src="https://www.cryptopro.ru/sites/default/files/products/cades/cadesplugin_api.js"></script>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

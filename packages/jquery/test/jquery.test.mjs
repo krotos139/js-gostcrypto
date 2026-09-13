@@ -1,0 +1,2 @@
+import assert from "node:assert/strict";import test from "node:test";import { installGostCrypto } from "@gostcrypto/jquery";
+test("jQuery adapter installs a provider-backed API",async()=>{const $={},provider={async listCertificates(){return["certificate"];},async sign(_id,data){return data;}},api=installGostCrypto($,provider);assert.equal($.gostCrypto,api);assert.deepEqual(await api.listCertificates(),["certificate"]);assert.deepEqual(await api.sign("id",Uint8Array.of(1),{algorithm:"gost3410-2012-256"}),Uint8Array.of(1));});

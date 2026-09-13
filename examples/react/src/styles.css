@@ -1,0 +1,7 @@
+:root { font-family: system-ui, sans-serif; color-scheme: light dark; }
+main { max-width: 52rem; margin: 2rem auto; padding: 0 1rem; }
+label, output { display: block; margin: 1rem 0; }
+select, textarea, input, button { box-sizing: border-box; display: block; width: 100%; margin-top: .35rem; font: inherit; }
+textarea { min-height: 7rem; }
+button { padding: .7rem; }
+output { padding: .75rem; background: color-mix(in srgb, CanvasText 8%, Canvas); }
