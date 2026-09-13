@@ -1,0 +1,29 @@
+{
+  "name": "@gostcrypto/pkcs8",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "sideEffects": false,
+  "dependencies": {
+    "@gostcrypto/asn1": "0.1.0",
+    "@gostcrypto/kdf": "0.1.0",
+    "@gostcrypto/legacy-gost28147": "0.1.0",
+    "@gostcrypto/signature": "0.1.0"
+  },
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "IURII IAKOVLEV"
+}

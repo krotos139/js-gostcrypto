@@ -1,0 +1,46 @@
+{
+  "name": "@gostcrypto/gostcrypto",
+  "version": "0.1.0",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "browser": "./dist/browser.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "browser": "./dist/browser.js",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    },
+    "./global": "./dist/gostcrypto.min.js"
+  },
+  "sideEffects": false,
+  "dependencies": {
+    "@gostcrypto/acpkm": "0.1.0",
+    "@gostcrypto/asn1": "0.1.0",
+    "@gostcrypto/ciphers": "0.1.0",
+    "@gostcrypto/cms": "0.1.0",
+    "@gostcrypto/core": "0.1.0",
+    "@gostcrypto/hash": "0.1.0",
+    "@gostcrypto/kdf": "0.1.0",
+    "@gostcrypto/keywrap": "0.1.0",
+    "@gostcrypto/legacy-gost28147": "0.1.0",
+    "@gostcrypto/legacy-gost341194": "0.1.0",
+    "@gostcrypto/mgm": "0.1.0",
+    "@gostcrypto/modes": "0.1.0",
+    "@gostcrypto/pfx": "0.1.0",
+    "@gostcrypto/pkcs8": "0.1.0",
+    "@gostcrypto/providers": "0.1.0",
+    "@gostcrypto/signature": "0.1.0",
+    "@gostcrypto/vko": "0.1.0"
+  },
+  "author": "IURII IAKOVLEV"
+}

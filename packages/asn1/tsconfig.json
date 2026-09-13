@@ -1,0 +1,6 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": { "composite": true, "rootDir": "./src", "outDir": "./dist" },
+  "references": [{ "path": "../hash" }, { "path": "../legacy-gost341194" }, { "path": "../signature" }],
+  "include": ["src/**/*.ts"]
+}

@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": { "composite": true, "rootDir": "./src", "outDir": "./dist" },
+  "references": [
+    { "path": "../asn1" },
+    { "path": "../cms" },
+    { "path": "../kdf" },
+    { "path": "../pkcs8" },
+    { "path": "../signature" }
+  ],
+  "include": ["src/**/*.ts"]
+}

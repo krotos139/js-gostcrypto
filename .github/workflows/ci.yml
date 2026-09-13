@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Node ${{ matrix.node }} / ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            node: 18
+            node_options: --experimental-global-webcrypto
+          - os: ubuntu-latest
+            node: 20
+            node_options: ""
+          - os: ubuntu-latest
+            node: 22
+            node_options: ""
+          - os: windows-latest
+            node: 22
+            node_options: ""
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    env:
+      NODE_OPTIONS: ${{ matrix.node_options }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci
+      - run: npm run validate:packages
+      - run: npm test
+      - name: Verify npm package contents
+        if: matrix.os == 'ubuntu-latest' && matrix.node == 22
+        run: npm pack --workspaces --dry-run
+
+  benchmark-smoke:
+    name: Comparison benchmark smoke test
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Validate vectors and benchmark adapters
+        run: npm run benchmark:compare
+        env:
+          BENCHMARK_SAMPLES: 1

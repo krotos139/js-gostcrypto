@@ -1,0 +1,1 @@
+{"extends":"../../tsconfig.base.json","compilerOptions":{"composite":true,"rootDir":"./src","outDir":"./dist"},"references":[{"path":"../legacy-gost28147"}],"include":["src/**/*.ts"]}

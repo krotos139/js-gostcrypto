@@ -1,0 +1,27 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./packages/core" },
+    { "path": "./packages/hash" },
+    { "path": "./packages/ciphers" },
+    { "path": "./packages/modes" },
+    { "path": "./packages/kdf" },
+    { "path": "./packages/acpkm" },
+    { "path": "./packages/mgm" },
+    { "path": "./packages/keywrap" },
+    { "path": "./packages/signature" },
+    { "path": "./packages/vko" },
+    { "path": "./packages/asn1" },
+    { "path": "./packages/pkcs8" },
+    { "path": "./packages/pfx" },
+    { "path": "./packages/cms" },
+    { "path": "./packages/gostcrypto" },
+    { "path": "./packages/providers" },
+    { "path": "./packages/react" },
+    { "path": "./packages/angularjs" },
+    { "path": "./packages/jquery" },
+    { "path": "./packages/node" },
+    { "path": "./packages/legacy-gost28147" },
+    { "path": "./packages/legacy-gost341194" }
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": { "composite": true, "rootDir": "./src", "outDir": "./dist" },
+  "references": [{ "path": "../asn1" },{ "path": "../hash" },{ "path": "../keywrap" },{ "path": "../legacy-gost28147" },{ "path": "../legacy-gost341194" },{ "path": "../signature" },{ "path": "../vko" }],
+  "include": ["src/**/*.ts"]
+}

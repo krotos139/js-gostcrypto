@@ -1,0 +1,28 @@
+{
+  "name": "@gostcrypto/keywrap",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "sideEffects": false,
+  "dependencies": {
+    "@gostcrypto/core": "0.1.0",
+    "@gostcrypto/legacy-gost28147": "0.1.0",
+    "@gostcrypto/modes": "0.1.0"
+  },
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "IURII IAKOVLEV"
+}

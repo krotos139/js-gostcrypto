@@ -1,0 +1,11 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": { "composite": true, "rootDir": "./src", "outDir": "./dist" },
+  "references": [
+    { "path": "../acpkm" },{ "path": "../asn1" },{ "path": "../ciphers" },{ "path": "../cms" },
+    { "path": "../core" },{ "path": "../hash" },{ "path": "../kdf" },{ "path": "../keywrap" },
+    { "path": "../legacy-gost28147" },{ "path": "../legacy-gost341194" },{ "path": "../mgm" },
+    { "path": "../modes" },{ "path": "../pfx" },{ "path": "../pkcs8" },{ "path": "../providers" },{ "path": "../signature" },{ "path": "../vko" }
+  ],
+  "include": ["src/**/*.ts"]
+}

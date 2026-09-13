@@ -1,0 +1,2 @@
+import assert from "node:assert/strict";import test from "node:test";import { isValidElement } from "react";import { GostCryptoProvider,useCertificates,useGostSign } from "@gostcrypto/react";
+test("React adapter exports a provider component and hooks",()=>{const provider={async listCertificates(){return[];},async sign(){return new Uint8Array();}},element=GostCryptoProvider({provider,children:"content"});assert.equal(isValidElement(element),true);assert.equal(typeof useCertificates,"function");assert.equal(typeof useGostSign,"function");});

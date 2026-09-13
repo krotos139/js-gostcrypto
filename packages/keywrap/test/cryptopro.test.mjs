@@ -1,0 +1,9 @@
+import assert from "node:assert/strict";
+import test from "node:test";
+import { paramCryptoProA,paramCryptoProB } from "@gostcrypto/legacy-gost28147";
+import { CryptoProKeyIntegrityError,diversifyCryptoProKek,unwrapCryptoPro,unwrapGost28147,wrapCryptoPro,wrapGost28147 } from "@gostcrypto/keywrap";
+
+const kek=Uint8Array.from({length:32},(_,i)=>i*3&255),cek=Uint8Array.from({length:32},(_,i)=>255-i*5&255),ukm=Uint8Array.from([0x11,0x22,0x33,0x44,0x55,0x66,0x77,0x88]);
+test("RFC 4357 CryptoPro and GOST key wrap round-trip",()=>{const sbox=paramCryptoProA(),cryptoPro=wrapCryptoPro(kek,ukm,cek,sbox),plain=wrapGost28147(kek,ukm,cek,sbox);assert.equal(cryptoPro.length,44);assert.deepEqual(cryptoPro.subarray(0,8),ukm);assert.notDeepEqual(cryptoPro,plain);assert.deepEqual(unwrapCryptoPro(kek,cryptoPro,sbox),cek);assert.deepEqual(unwrapGost28147(kek,plain,sbox),cek);assert.throws(()=>unwrapGost28147(kek,cryptoPro,sbox),CryptoProKeyIntegrityError);});
+test("CryptoPro diversification depends on every UKM bit",()=>{const sbox=paramCryptoProA(),base=diversifyCryptoProKek(kek,ukm,sbox),seen=new Set([Buffer.from(base).toString("hex")]);for(let byte=0;byte<8;byte+=1)for(let bit=0;bit<8;bit+=1){const changed=Uint8Array.from(ukm);changed[byte]^=1<<bit;const value=Buffer.from(diversifyCryptoProKek(kek,changed,sbox)).toString("hex");assert.equal(seen.has(value),false);seen.add(value);}});
+test("CryptoPro unwrap authenticates key, UKM and S-box",()=>{const wrapped=wrapCryptoPro(kek,ukm,cek,paramCryptoProA());for(const position of[0,8,24,43]){const changed=Uint8Array.from(wrapped);changed[position]^=1;assert.throws(()=>unwrapCryptoPro(kek,changed,paramCryptoProA()),CryptoProKeyIntegrityError);}assert.throws(()=>unwrapCryptoPro(kek,wrapped,paramCryptoProB()),CryptoProKeyIntegrityError);assert.throws(()=>wrapCryptoPro(kek,new Uint8Array(7),cek,paramCryptoProA()),/8 bytes/);});

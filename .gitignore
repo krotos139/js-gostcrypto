@@ -1,0 +1,6 @@
+node_modules/
+dist/
+*.tsbuildinfo
+coverage/
+packages/*/LICENSE
+packages/*/README.md

@@ -1,0 +1,20 @@
+import assert from "node:assert/strict";
+import test from "node:test";
+import { OID,encodeBitString,encodeDer,encodeOid,encodeSequence,encodeSubjectPublicKeyInfo,readDer,readDerChildren } from "@gostcrypto/asn1";
+import { CMS_OID,CmsError,createTimestampRequest,encodeTstInfo,parseSignedData,parseTimestampResponse,parseTimestampToken,signCms } from "@gostcrypto/cms";
+import { streebog256 } from "@gostcrypto/hash";
+import { createPrivateKey,encodePkixSignature,signDigest,TC26_PARAM_SET_256_A } from "@gostcrypto/signature";
+
+const ascii=(value)=>new TextEncoder().encode(value),integer=(value)=>encodeDer(0x02,Uint8Array.of(value)),fill=(target)=>target.fill(2);
+function certificate(privateKey,serial){const algorithm=encodeSequence(encodeOid(OID.signWithDigest256)),name=encodeSequence(encodeDer(0x31,encodeSequence(encodeOid("2.5.4.3"),encodeDer(0x0c,ascii(`TSA ${serial}`))))),validity=encodeSequence(encodeDer(0x17,ascii("260101000000Z")),encodeDer(0x17,ascii("360101000000Z"))),tbs=encodeSequence(encodeDer(0xa0,integer(2)),integer(serial),algorithm,name,validity,name,encodeSubjectPublicKeyInfo(privateKey.publicKey)),signature=encodePkixSignature(privateKey.curve,signDigest(privateKey,streebog256(tbs),fill));return encodeSequence(tbs,algorithm,encodeBitString(signature));}
+
+test("RFC 3161 timestamp tokens bind a CAdES-T signature",()=>{const signerKey=createPrivateKey(TC26_PARAM_SET_256_A,11n),signerCert=certificate(signerKey,1),tsaKey=createPrivateKey(TC26_PARAM_SET_256_A,13n),tsaCert=certificate(tsaKey,2),when=new Date("2026-09-12T08:09:10Z"),nonce=123456789n;
+  const issue=(signature)=>{const tstInfo=encodeTstInfo({digestValue:streebog256(signature),digestOid:OID.digest256,policy:"1.2.643.100.113.1",serialNumber:99n,genTime:when,nonce});return signCms(tstInfo,tsaCert,tsaKey,{contentType:CMS_OID.tstInfo,fillRandom:fill});};
+  const content=ascii("документ с доверенной меткой времени"),encoded=signCms(content,signerCert,signerKey,{detached:true,timestamp:issue,fillRandom:fill}),signed=parseSignedData(encoded);signed.verify(content);assert.equal(signed.signers[0].verifyTimestamps(),1);const timestamp=signed.signers[0].timestamps()[0];assert.equal(timestamp.genTime.toISOString(),when.toISOString());assert.equal(timestamp.serialNumber,99n);assert.equal(timestamp.nonce,nonce);assert.throws(()=>timestamp.verify(ascii("wrong signature")),(error)=>error instanceof CmsError&&error.code==="TIMESTAMP_IMPRINT");
+});
+
+test("RFC 3161 timestamp requests and responses encode required fields",()=>{const digest=streebog256(ascii("signature")),request=createTimestampRequest(digest,OID.digest256,{policy:"1.2.3.4",nonce:42n,requestCertificate:true}),requestFields=readDerChildren(readDer(request).content);assert.equal(requestFields.length,5);assert.equal(requestFields[4].tag,0x01);
+  const tsaKey=createPrivateKey(TC26_PARAM_SET_256_A,17n),tsaCert=certificate(tsaKey,3),token=signCms(encodeTstInfo({digestValue:digest,digestOid:OID.digest256,policy:"1.2.3.4",serialNumber:5n,genTime:new Date("2026-01-02T03:04:05Z")}),tsaCert,tsaKey,{contentType:CMS_OID.tstInfo,fillRandom:fill}),response=encodeSequence(encodeSequence(integer(0)),token);assert.deepEqual(parseTimestampResponse(response).raw(),token);assert.deepEqual(parseTimestampToken(token).raw(),token);assert.throws(()=>parseTimestampResponse(encodeSequence(encodeSequence(integer(2)))),(error)=>error instanceof CmsError&&error.code==="TIMESTAMP_STATUS");
+});
+
+test("CAdES-T refuses a timestamp for another signature",()=>{const key=createPrivateKey(TC26_PARAM_SET_256_A,19n),cert=certificate(key,4),tsaKey=createPrivateKey(TC26_PARAM_SET_256_A,23n),tsaCert=certificate(tsaKey,5),foreign=ascii("foreign");const bad=()=>signCms(encodeTstInfo({digestValue:streebog256(foreign),digestOid:OID.digest256,policy:"1.2.3",serialNumber:1n,genTime:new Date("2026-01-01T00:00:00Z")}),tsaCert,tsaKey,{contentType:CMS_OID.tstInfo,fillRandom:fill});assert.throws(()=>signCms(ascii("document"),cert,key,{timestamp:bad,fillRandom:fill}),(error)=>error instanceof CmsError&&error.code==="TIMESTAMP_IMPRINT");});
